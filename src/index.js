@@ -8,6 +8,8 @@ require("monero-javascript");
 //"use strict"
 
 // detect if called from worker
+console.clear();
+
 console.log("ENTER INDEX.JS");
 let isWorker = self.document? false : true;
 //console.log("IS WORKER: " + isWorker);
