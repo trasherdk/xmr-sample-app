@@ -58,17 +58,19 @@ onmessage = function(e) {
     }
 
     const daemon_config = {
-      uri: "https://xmr-app.fumlersoft.dk/daemon",
-      protocol: "https",
+//      uri: protocol + "://xmr-app.fumlersoft.dk/daemon",
+      uri: protocol + "://xmr-app.fumlersoft.dk:38081",
+      /*
+      protocol: protocol,
       host: "xmr-app.fumlersoft.dk",
       port: 38081,
+      */
       user: login.deamon.user,
       pass: login.deamon.pass
     }
 
     // connect to monero-daemon-rpc
     console.log("Connecting to monero-daemon-rpc...");
-
     let daemon = new MoneroDaemonRpc(daemon_config);
 
     let blockheight = 0;
@@ -81,10 +83,13 @@ onmessage = function(e) {
     console.log("Daemon height: " + blockheight);
   
     const wallet_config = {
-      uri: "https://xmr-app.fumlersoft.dk/wallet",
-      protocol: "https",
+//      uri: protocol + "://xmr-app.fumlersoft.dk/wallet",
+      uri: protocol + "://xmr-app.fumlersoft.dk:38083",
+      /*
+      protocol: protocol,
       host: "xmr-app.fumlersoft.dk",
       port: 38083,
+      */
       user: login.wallet.user,
       pass: login.wallet.pass
     }
@@ -118,16 +123,20 @@ onmessage = function(e) {
       }
     }
     
-    // print rpc wallet balance
+    console.log("print rpc wallet balance");
+
     console.log("Wallet rpc mnemonic: " + await walletRpc.getMnemonic());
     console.log("Wallet rpc balance: " + await walletRpc.getBalance());
     
-    // create a random core wallet
-    let daemonConnection = new MoneroRpcConnection({uri: daemon_config.uri, user: "superuser", pass: "abctesting123"});  // TODO: support 3 strings, "pass" should probably be renamed to "password" 
+    console.log("create a random core wallet");
+
+    let daemonConnection = new MoneroRpcConnection(daemon_config);  // TODO: support 3 strings, "pass" should probably be renamed to "password" 
+//    let daemonConnection = new MoneroRpcConnection({uri: daemon_config.uri, user: "superuser", pass: "abctesting123"});  // TODO: support 3 strings, "pass" should probably be renamed to "password" 
     let walletCore = await MoneroWalletCore.createWalletRandom("", "supersecretpassword123", MoneroNetworkType.STAGENET, daemonConnection, "English");
     console.log("Core wallet random mnemonic: " + await walletCore.getMnemonic());
     
-    // create a core wallet from mnemonic
+    console.log("create a core wallet from mnemonic");
+
     walletCore = await MoneroWalletCore.createWalletFromMnemonic("", "supersecretpassword123", MoneroNetworkType.STAGENET, mnemonic, daemonConnection, restoreHeight);
     assert.equal(await walletCore.getMnemonic(), mnemonic);
     assert.equal(await walletCore.getPrimaryAddress(), primaryAddress);
