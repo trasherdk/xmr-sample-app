@@ -18,7 +18,7 @@ onmessage = function(e) {
       console.log(e.message);
       return false;
     }
-
+    console.clear();
     console.log("done loading module");
     
     // demonstrate c++ utilities which use monero-project via webassembly
@@ -42,6 +42,7 @@ onmessage = function(e) {
     console.log("Keys-only wallet imported mnemonic: " + await walletKeys.getMnemonic());
     console.log("Keys-only wallet imported address: " + await walletKeys.getPrimaryAddress());
     
+//    const protocol = location.protocol.replace(/\:$/,'');
     const protocol = "http";
     //const domain = "localhost";
     //const domain = "127.0.0.1";
@@ -60,6 +61,7 @@ onmessage = function(e) {
     const daemon_config = {
 //      uri: protocol + "://xmr-app.fumlersoft.dk/daemon",
       uri: protocol + "://xmr-app.fumlersoft.dk:38081",
+      mode: 'disable-fetch',
       /*
       protocol: protocol,
       host: "xmr-app.fumlersoft.dk",
@@ -70,7 +72,7 @@ onmessage = function(e) {
     }
 
     // connect to monero-daemon-rpc
-    console.log("Connecting to monero-daemon-rpc...");
+    console.log("Connecting to monero-daemon-rpc:", daemon_config.user);
     let daemon = new MoneroDaemonRpc(daemon_config);
 
     let blockheight = 0;
@@ -85,6 +87,7 @@ onmessage = function(e) {
     const wallet_config = {
 //      uri: protocol + "://xmr-app.fumlersoft.dk/wallet",
       uri: protocol + "://xmr-app.fumlersoft.dk:38083",
+      mode: 'disable-fetch',
       /*
       protocol: protocol,
       host: "xmr-app.fumlersoft.dk",
