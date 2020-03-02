@@ -61,7 +61,6 @@ onmessage = function(e) {
     const daemon_config = {
 //      uri: protocol + "://xmr-app.fumlersoft.dk/daemon",
       uri: protocol + "://xmr-app.fumlersoft.dk:38081",
-      mode: 'disable-fetch',
       /*
       protocol: protocol,
       host: "xmr-app.fumlersoft.dk",
@@ -87,7 +86,6 @@ onmessage = function(e) {
     const wallet_config = {
 //      uri: protocol + "://xmr-app.fumlersoft.dk/wallet",
       uri: protocol + "://xmr-app.fumlersoft.dk:38083",
-      mode: 'disable-fetch',
       /*
       protocol: protocol,
       host: "xmr-app.fumlersoft.dk",
