@@ -36,7 +36,6 @@ let configBase = {
 let configApp = Object.assign({}, configBase, {
     name: "App config",
     entry: "./src/index.js",
-    mode: 'development',
     output: {
       path: path.resolve(__dirname, "browser_build"),
       filename: "xmr-sample-app.js"
