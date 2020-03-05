@@ -46,24 +46,25 @@ onmessage = function(e) {
     const protocol = "http";
     //const domain = "localhost";
     //const domain = "127.0.0.1";
-    const domain = "xmr-app.fumlersoft.dk"
+    const domain = "host.example.com"
     const login = {
       deamon: {
         user: "superuser",
-        pass: "abctesting123"
+        pass: "abctesting123",
+        port: 38081
       },
       wallet: {
         user: "rpc_user",
-        pass: "abc123"
+        pass: "abc123",
+        port: 38083
       }
     }
 
     const daemon_config = {
-//      uri: protocol + "://xmr-app.fumlersoft.dk/daemon",
-      uri: protocol + "://xmr-app.fumlersoft.dk:38081",
+      uri: protocol + "://" + domain + ":" + login.deamon.port,
       /*
       protocol: protocol,
-      host: "xmr-app.fumlersoft.dk",
+      host: "host.example.com",
       port: 38081,
       */
       user: login.deamon.user,
@@ -84,11 +85,10 @@ onmessage = function(e) {
     console.log("Daemon height: " + blockheight);
   
     const wallet_config = {
-//      uri: protocol + "://xmr-app.fumlersoft.dk/wallet",
-      uri: protocol + "://xmr-app.fumlersoft.dk:38083",
-      /*
+      uri: protocol + "://" + domain + ":" + login.wallet.port,
+/*
       protocol: protocol,
-      host: "xmr-app.fumlersoft.dk",
+      host: "host.example.com",
       port: 38083,
       */
       user: login.wallet.user,
