@@ -6,7 +6,8 @@ NETTYPE="stagenet"
 DATA=/var/lib/monero/data/${NETTYPE}
 WALLETS=${DATA}/wallets
 LOGS=${DATA}/logs
-BIN=${BASE}/monero
+BIN=/var/lib/monero/bin
+
 source ${BIN}/monero-scripts.sh
 source ${BIN}/colors.sh
 
@@ -28,6 +29,17 @@ echo "Monero binaries.....: ${BIN}"
   echo "If you have the monero binaries in another localion,"
   echo "change the BIN variable to point to that location."
   exit 1
+}
+
+[ -d ${DATA} ] \
+&& {
+  [ "${NETTYPE}" = "mainnet" ] \
+  && {
+
+  }
+} \
+|| {
+  echo "Missing data directory: "
 }
 
 while [ $# -gt 0 ]
