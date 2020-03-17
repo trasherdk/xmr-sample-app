@@ -93,10 +93,6 @@ start_daemon() {
 
 	local CMD="${DAEMON} \
 		--prune-blockchain \
-		--rpc-ssl-allow-any-cert \
-		--rpc-ssl-private-key ${CERTS}/monero-daemon.key \
-		--rpc-ssl-certificate ${CERTS}/monero-daemon.crt \
-		--rpc-ssl-ca-certificates ${CERTS}/ca.crt \
 		--data-dir ${DATA} \
 		--log-level 0 \
 		--log-file ${LOGS}/monerod.log \
@@ -129,10 +125,6 @@ start_wallet() {
 		--confirm-external-bind \
 		--rpc-bind-ip '86.48.96.142' \
 		--rpc-bind-port 38083 \
-		--daemon-ssl-allow-any-cert \
-		--rpc-ssl-private-key ${CERTS}/monero-rpc.key \
-		--rpc-ssl-certificate ${CERTS}/monero-rpc.crt \
-		--rpc-ssl-ca-certificates ${CERTS}/ca.crt \
 		--wallet-dir ${WALLETS} \
 		--rpc-login rpc_user:abc123 \
 		--rpc-access-control-origins 'http://xmr-app.fumlersoft.dk,https://xmr-app.fumlersoft.dk,http://digest-request.fumlersoft.dk,https://digest-request.fumlersoft.dk'" 
