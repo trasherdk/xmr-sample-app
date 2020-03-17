@@ -93,6 +93,10 @@ start_daemon() {
 
 	local CMD="${DAEMON} \
 		--prune-blockchain \
+		--rpc-ssl-allow-any-cert \
+		--rpc-ssl-private-key ${CERTS}/monero-daemon.key \
+		--rpc-ssl-certificate ${CERTS}/monero-daemon.crt \
+		--rpc-ssl-ca-certificates ${CERTS}/ca.crt \
 		--data-dir ${DATA} \
 		--log-level 0 \
 		--log-file ${LOGS}/monerod.log \
@@ -103,7 +107,9 @@ start_daemon() {
 
 	screen -S "${SNAME}-${NETTYPE}" -d -m  bash -c "${CMD}" \
 	&& { echo ${GREEN}OK${RESTORE}; } \
-	|| { echo ${RED}FAIL${RESTORE}; } \
+	|| { echo ${RED}FAIL${RESTORE}; }
+
+	[ ${VERBOSE} -eq 1 ] && echo "${CMD}"
 }
 
 start_wallet() {
@@ -116,20 +122,25 @@ start_wallet() {
 	[ "${NETTYPE}" = "mainnet" ] || RPC="${RPC} --${NETTYPE}"
 
 	local CMD="${RPC} \
-		--daemon-address 'http://xmr-app.fumlersoft.dk:38081' \
+		--daemon-address '86.48.96.142:38081' \
 		--daemon-login superuser:abctesting123 \
 		--log-level 4 \
 		--log-file ${LOGS}/monero-rpc.log \
 		--confirm-external-bind \
 		--rpc-bind-ip '86.48.96.142' \
 		--rpc-bind-port 38083 \
+		--daemon-ssl-allow-any-cert \
+		--rpc-ssl-private-key ${CERTS}/monero-rpc.key \
+		--rpc-ssl-certificate ${CERTS}/monero-rpc.crt \
+		--rpc-ssl-ca-certificates ${CERTS}/ca.crt \
 		--wallet-dir ${WALLETS} \
 		--rpc-login rpc_user:abc123 \
-		--rpc-access-control-origins 'http://digest-request.fumlersoft.dk,https://digest-request.fumlersoft.dk,http://xmr-app.fumlersoft.dk,https://xmr-app.fumlersoft.dk'" 
+		--rpc-access-control-origins 'http://xmr-app.fumlersoft.dk,https://xmr-app.fumlersoft.dk,http://digest-request.fumlersoft.dk,https://digest-request.fumlersoft.dk'" 
 #		--disable-rpc-login \
 
 	screen -S "${SNAME}-${NETTYPE}" -d -m  bash -c "${CMD}" \
 	&& { echo ${GREEN}OK${RESTORE}; } \
-	|| { echo ${RED}FAIL${RESTORE}; } \
+	|| { echo ${RED}FAIL${RESTORE}; }
 
+	[ ${VERBOSE} -eq 1 ] && echo "${CMD}"
 }
