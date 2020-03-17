@@ -7,9 +7,11 @@ DATA=/var/lib/monero/data/${NETTYPE}
 WALLETS=${DATA}/wallets
 LOGS=${DATA}/logs
 BIN=/var/lib/monero/bin
+CERTS=$(dirname ${BIN})/certs
+VERBOSE=0
 
-source ${BIN}/monero-scripts.sh
-source ${BIN}/colors.sh
+source ${BASE}/monero/monero-scripts.sh
+source ${BASE}/monero/colors.sh
 
 [ -d ${DATA} ] || mkdir -p ${DATA}
 [ -d ${WALLETS} ] || mkdir -p ${WALLETS}
@@ -21,6 +23,7 @@ echo "Data directory......: ${DATA}"
 echo "Wallets directory...: ${WALLETS}"
 echo "Logs directory......: ${LOGS}"
 echo "Monero binaries.....: ${BIN}"
+echo "Monero certificates.: ${CERTS}"
 
 [ -f ${BIN}/monerod ] \
 || {
@@ -32,29 +35,32 @@ echo "Monero binaries.....: ${BIN}"
 }
 
 [ -d ${DATA} ] \
-&& {
-  [ "${NETTYPE}" = "mainnet" ] \
   && {
-
+    echo "Data directory OK"
+  } \
+  || {
+  echo "Missing data directory: ${DATA}"
+  exit 1
   }
-} \
-|| {
-  echo "Missing data directory: "
-}
 
 while [ $# -gt 0 ]
 do
   case "$1" in
+    "verbose")
+      shift
+      VERBOSE=1
+      ;;
     "ls")
       shift
       screen -ls | grep -i "xmr"
       ;;
     "stop")
       shift
-      is_valid_parameter $1 || break
       while [ $# -gt 0 ]
       do
+        is_valid_parameter $1 || break
         NAME=$1
+        shift
         case "${NAME}" in
           "daemon")
             stop_daemon
@@ -63,19 +69,19 @@ do
             stop_wallet
             ;;
           *)
-            #echo "Unknown session: ${NAME}"
+            echo "Unknown parameter: ${NAME}"
             break
             ;;
         esac
-        shift
       done
       ;;
     "start")
       shift
-      is_valid_parameter $1 || break
       while [ $# -gt 0 ]
       do
+        is_valid_parameter $1 || break
         NAME=$1
+        shift
         case "${NAME}" in
           "daemon")
             start_daemon
@@ -84,19 +90,19 @@ do
             start_wallet
             ;;
           *)
-            #echo "Unknown session: ${NAME}"
+            echo "Unknown parameter: ${NAME}"
             break
             ;;
         esac
-        shift
       done
       ;;
     "restart")
       shift
-      is_valid_parameter $1 || break
       while [ $# -gt 0 ]
       do
+        is_valid_parameter $1 || break
         NAME=$1
+        shift
         case "${NAME}" in
           "daemon")
             stop_daemon
@@ -107,12 +113,15 @@ do
             start_wallet
             ;;
           *)
-            #echo "Unknown session: ${NAME}"
+            echo "Unknown parameter: ${NAME}"
             break
             ;;
         esac
-        shift
       done
+      ;;
+    *)
+      echo "Unknown command: $1"
+      shift
       ;;
   esac
 done
