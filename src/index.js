@@ -24,13 +24,15 @@ if (isWorker) {
  * Main thread.
  */
 async function runMain() {
+  console.clear();
   console.log("RUN MAIN");
   
   // config
-  let daemonRpcUri = "http://localhost:38081";
+  let daemonHost = "xmr-app.fumlersoft.dk";
+  let daemonRpcUri = `http://${daemonHost}:38081`;
   let daemonRpcUsername = "superuser";
   let daemonRpcPassword = "abctesting123";
-  let walletRpcUri = "http://localhost:38083";
+  let walletRpcUri = `http://${daemonHost}:38083`;
   let walletRpcUsername = "rpc_user";
   let walletRpcPassword = "abc123";
   let walletRpcFileName = "test_wallet_1";
