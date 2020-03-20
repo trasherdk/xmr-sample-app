@@ -99,7 +99,7 @@ start_daemon() {
 		--confirm-external-bind \
 		--rpc-bind-ip '86.48.96.142' \
 		--rpc-login superuser:abctesting123 \
-		--rpc-access-control-origins 'http://xmr-app.fumlersoft.dk,https://xmr-app.fumlersoft.dk,http://digest-request.fumlersoft.dk,https://digest-request.fumlersoft.dk'" 
+		--rpc-access-control-origins 'http://86.48.96.142,https://86.48.96.142,http://xmr-app.fumlersoft.dk,https://xmr-app.fumlersoft.dk,http://digest-request.fumlersoft.dk,https://digest-request.fumlersoft.dk,fumlersoft.dk'" 
 
 	screen -S "${SNAME}-${NETTYPE}" -d -m  bash -c "${CMD}" \
 	&& { echo ${GREEN}OK${RESTORE}; } \
@@ -127,7 +127,7 @@ start_wallet() {
 		--rpc-bind-port 38083 \
 		--wallet-dir ${WALLETS} \
 		--rpc-login rpc_user:abc123 \
-		--rpc-access-control-origins 'http://xmr-app.fumlersoft.dk,https://xmr-app.fumlersoft.dk,http://digest-request.fumlersoft.dk,https://digest-request.fumlersoft.dk'" 
+		--rpc-access-control-origins 'http://86.48.96.142,https://86.48.96.142,http://xmr-app.fumlersoft.dk,https://xmr-app.fumlersoft.dk,http://digest-request.fumlersoft.dk,https://digest-request.fumlersoft.dk,fumlersoft.dk'" 
 #		--disable-rpc-login \
 
 	screen -S "${SNAME}-${NETTYPE}" -d -m  bash -c "${CMD}" \
