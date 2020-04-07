@@ -68,6 +68,9 @@ do
           "wallet")
             stop_wallet
             ;;
+          "wallet-ssl")
+            stop_ssl_wallet
+            ;;
           *)
             echo "Unknown parameter: ${NAME}"
             break
@@ -88,6 +91,9 @@ do
             ;;
           "wallet")
             start_wallet
+            ;;
+          "wallet-ssl")
+            start_ssl_wallet
             ;;
           *)
             echo "Unknown parameter: ${NAME}"
@@ -111,6 +117,10 @@ do
           "wallet")
             stop_wallet
             start_wallet
+            ;;
+          "wallet-ssl")
+            stop_ssl_wallet
+            start_ssl_wallet
             ;;
           *)
             echo "Unknown parameter: ${NAME}"
