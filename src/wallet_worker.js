@@ -42,11 +42,10 @@ onmessage = function(e) {
     console.log("Keys-only wallet imported mnemonic: " + await walletKeys.getMnemonic());
     console.log("Keys-only wallet imported address: " + await walletKeys.getPrimaryAddress());
     
-//    const protocol = location.protocol.replace(/\:$/,'');
-    const protocol = "http";
-    //const domain = "localhost";
-    //const domain = "127.0.0.1";
-    const domain = "host.example.com"
+    const protocol = location.protocol.replace(/\:$/,'');
+//    const protocol = "http";
+    const domain = location.host;
+//    const domain = "host.example.com";
     const login = {
       deamon: {
         user: "superuser",
@@ -58,7 +57,7 @@ onmessage = function(e) {
         pass: "abc123",
         port: 38083
       }
-    }
+    };
 
     const daemon_config = {
       uri: protocol + "://" + domain + ":" + login.deamon.port,
@@ -69,7 +68,7 @@ onmessage = function(e) {
       */
       user: login.deamon.user,
       pass: login.deamon.pass
-    }
+    };
 
     // connect to monero-daemon-rpc
     console.log("Connecting to monero-daemon-rpc:", daemon_config.user);
@@ -93,7 +92,7 @@ onmessage = function(e) {
       */
       user: login.wallet.user,
       pass: login.wallet.pass
-    }
+    };
     
     // connect to monero-wallet-rpc
     console.log("Connecting to monero-wallet-rpc...");
@@ -227,4 +226,4 @@ onmessage = function(e) {
 ////    console.log(MoneroJS);
 //    //runWallet(MoneroJS);
 //  });
-}
+};
