@@ -28,11 +28,16 @@ async function runMain() {
   console.log("RUN MAIN");
   
   // config
-  let daemonHost = "xmr-app.fumlersoft.dk";
-  let daemonRpcUri = `http://${daemonHost}:38081`;
+  let protocol = location.protocol.replace(/\:$/,'');
+  let daemonHost = location.host || "xmr-app.fumlersoft.dk";
+  let daemonPort = protocol == "http" ? 38081 : 38081;
+//  let daemonRpcUri = `${protocol}://${daemonHost}:${daemonPort}`;
+  let daemonRpcUri = `${protocol}://${daemonHost}/daemon`;
   let daemonRpcUsername = "superuser";
   let daemonRpcPassword = "abctesting123";
-  let walletRpcUri = `http://${daemonHost}:38083`;
+  let walletPort = protocol == "http" ? 38083 : 38083;
+//  let walletRpcUri = `${protocol}://${daemonHost}:${walletPort}`;
+  let walletRpcUri = `${protocol}://${daemonHost}/wallet`;
   let walletRpcUsername = "rpc_user";
   let walletRpcPassword = "abc123";
   let walletRpcFileName = "test_wallet_1";
@@ -62,12 +67,25 @@ async function runMain() {
   console.log("Keys-only wallet random mnemonic: " + await walletKeys.getMnemonic());
   
   // connect to monero-daemon-rpc on same thread as core wallet so requests from same client to daemon are synced
+  let daemonConfig = {uri: daemonRpcUri, user: daemonRpcUsername, pass: daemonRpcPassword, proxyToWorker: proxyToWorker};
   console.log("Connecting to monero-daemon-rpc" + (proxyToWorker ? " in worker" : ""));
-  let daemon = await MoneroDaemonRpc.create({uri: daemonRpcUri, user: daemonRpcUsername, pass: daemonRpcPassword, proxyToWorker: proxyToWorker});
-  console.log("Daemon height: " + await daemon.getHeight());
+  console.log("Daemon config:", JSON.stringify(daemonConfig));
+  let daemon = await MoneroDaemonRpc.create(daemonConfig);
+  
+  console.log("Daemon RPC: Try to get blockheight..");
+  let blockHeight = 0;
+  try {
+    blockHeight = await daemon.getHeight();
+  } catch (e) {
+    console.error("Daemon RPC:", e.message);
+  }
+    
+  console.log("Daemon height: " + blockHeight );
   
   // connect to monero-wallet-rpc
-  let walletRpc = new MoneroWalletRpc({uri: walletRpcUri, user: walletRpcUsername, pass: walletRpcPassword});
+  let walletConfig = {uri: walletRpcUri, user: walletRpcUsername, pass: walletRpcPassword};
+  console.log("Connecting to monero-wallet-rpc:", JSON.stringify(walletConfig));
+  let walletRpc = new MoneroWalletRpc(walletConfig);
   
   // open or create rpc wallet
   try {
@@ -92,8 +110,11 @@ async function runMain() {
   console.log("Wallet rpc balance: " + await walletRpc.getBalance());  // TODO: why does this print digits and not object?
   
   // create a core wallet from mnemonic
-  let daemonConnection = new MoneroRpcConnection({uri: daemonRpcUri, user: daemonRpcUsername, pass: daemonRpcPassword});
-  let walletCorePath = useFS ? GenUtils.getUUID() : "";
+  console.log("Create connection to daemon:", daemonConfig);
+  //let daemonConnection = new MoneroRpcConnection({uri: daemonRpcUri, user: daemonRpcUsername, pass: daemonRpcPassword});
+  let daemonConnection = new MoneroRpcConnection(daemonConfig);
+  
+  let walletCorePath = useFS ? GenUtils.uuidv4() : "";
   console.log("Creating core wallet" + (proxyToWorker ? " in worker" : "") + (useFS ? " at path " + walletCorePath : ""));
   let walletCore = await MoneroWalletCore.createWalletFromMnemonic(walletCorePath, "abctesting123", MoneroNetworkType.STAGENET, mnemonic, daemonConnection, restoreHeight, seedOffset, proxyToWorker, FS); 
   console.log("Core wallet imported mnemonic: " + await walletCore.getMnemonic());
