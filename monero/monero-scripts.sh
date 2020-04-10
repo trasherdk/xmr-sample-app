@@ -10,6 +10,7 @@ CERTS_SHA256[compaq]="CC:23:5F:C4:4C:36:21:82:C9:60:31:38:B2:E6:10:9F:CA:5B:50:2
 CERTS_SHA256[firefox]="FA:29:3D:3D:BF:9B:02:EA:0C:54:04:A2:B8:F7:C7:3E:BD:75:5E:CF:A3:DE:98:1F:22:12:67:38:66:22:3F:B2"
 CERTS_SHA256[digest]="AA:3D:B9:BC:47:E4:FA:94:56:A8:92:F4:65:D9:2F:56:BC:C6:31:B0:81:BF:AB:0F:71:27:76:F6:28:BA:E1:93"
 CERTS_SHA256[ghost-m1]="39:47:BA:65:4F:E3:C0:79:B5:CF:E6:1E:C3:D6:34:52:4A:F1:BC:F9:51:6E:37:CB:56:3A:6D:56:55:BD:DF:DC"
+CERTS_SHA256[letsencrypt]="FE:6F:7F:6C:6C:AE:93:70:D0:1B:45:85:D0:67:BE:FB:9D:E6:0A:7A:A1:96:D0:4F:AB:A4:3B:04:3C:C2:6B:51"
 
 is_running() {
 	local NAME="$1"
@@ -110,7 +111,7 @@ start_daemon() {
 	local CMD="${DAEMON} \
 		--prune-blockchain \
 		--data-dir ${DATA} \
-		--log-level 0 \
+		--log-level '2,net.throttle:ERROR,net.http:TRACE' \
 		--log-file ${LOGS}/monerod.log \
 		--confirm-external-bind \
 		--rpc-bind-ip '${HOST}' \
@@ -137,12 +138,12 @@ start_wallet() {
 		--daemon-address '${HOST}:38081' \
 		--daemon-login superuser:abctesting123 \
 		--daemon-ssl-allow-any-cert \
+		--wallet-dir ${WALLETS} \
 		--log-level '2,net.throttle:ERROR,net.http:TRACE' \
 		--log-file ${LOGS}/monero-rpc.log \
 		--confirm-external-bind \
 		--rpc-bind-ip '${HOST}' \
 		--rpc-bind-port 38083 \
-		--wallet-dir ${WALLETS} \
 		--rpc-login rpc_user:abc123 \
 		--rpc-access-control-origins '${CORS}'" 
 #		--disable-rpc-login \
@@ -180,6 +181,7 @@ start_ssl_wallet() {
 		--rpc-ssl-allowed-fingerprints '${CERTS_SHA256[firefox]}' \
 		--rpc-ssl-allowed-fingerprints '${CERTS_SHA256[digest]}' \
 		--rpc-ssl-allowed-fingerprints '${CERTS_SHA256[ghost-m1]}' \
+		--rpc-ssl-allowed-fingerprints '${CERTS_SHA256[letsencrypt]}' \
 		--wallet-dir ${WALLETS} \
 		--rpc-login rpc_user:abc123 \
 		--rpc-access-control-origins '${CORS}'" 
