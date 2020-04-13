@@ -27,21 +27,27 @@ async function runMain() {
   console.clear();
   console.log("RUN MAIN");
   
-  // config
+  const revProxy = false;
+  // Daemon config
   let protocol = location.protocol.replace(/\:$/,'');
-  let daemonHost = location.host || "xmr-app.fumlersoft.dk";
-  let daemonPort = protocol == "http" ? 38081 : 38081;
+  let daemonHost = location.host.replace(/\/$/,'');
+  let daemonPort = revProxy === true ? '/daemon' : protocol === "http" ? ":38081" : ":38081";
 //  let daemonRpcUri = `${protocol}://${daemonHost}:${daemonPort}`;
-  let daemonRpcUri = `${protocol}://${daemonHost}/daemon`;
+  let daemonRpcUri = `${protocol}://${daemonHost}${daemonPort}`;
   let daemonRpcUsername = "superuser";
   let daemonRpcPassword = "abctesting123";
-  let walletPort = protocol == "http" ? 38083 : 38083;
+  console.log("Daemon URI", daemonRpcUri);
+
+  // Wallet config
+  let walletPort = revProxy === true ? '/wallet' : protocol === "http" ? ":38083" : ":38083";
 //  let walletRpcUri = `${protocol}://${daemonHost}:${walletPort}`;
-  let walletRpcUri = `${protocol}://${daemonHost}/wallet`;
+  let walletRpcUri = `${protocol}://${daemonHost}${walletPort}`;
   let walletRpcUsername = "rpc_user";
   let walletRpcPassword = "abc123";
   let walletRpcFileName = "test_wallet_1";
   let walletRpcFilePassword = "supersecretpassword123";
+  console.log("Wallet URI", walletRpcUri);
+
   let mnemonic = "goblet went maze cylinder stockpile twofold fewest jaded lurk rally espionage grunt aunt puffin kickoff refer shyness tether building eleven lopped dawn tasked toolbox grunt";
   let seedOffset = "";
   let restoreHeight = 531333;
@@ -67,7 +73,7 @@ async function runMain() {
   console.log("Keys-only wallet random mnemonic: " + await walletKeys.getMnemonic());
   
   // connect to monero-daemon-rpc on same thread as core wallet so requests from same client to daemon are synced
-  let daemonConfig = {uri: daemonRpcUri, user: daemonRpcUsername, pass: daemonRpcPassword, proxyToWorker: proxyToWorker};
+  const daemonConfig = {uri: daemonRpcUri, user: daemonRpcUsername, pass: daemonRpcPassword, proxyToWorker: proxyToWorker};
   console.log("Connecting to monero-daemon-rpc" + (proxyToWorker ? " in worker" : ""));
   console.log("Daemon config:", JSON.stringify(daemonConfig));
   let daemon = await MoneroDaemonRpc.create(daemonConfig);
@@ -83,7 +89,7 @@ async function runMain() {
   console.log("Daemon height: " + blockHeight );
   
   // connect to monero-wallet-rpc
-  let walletConfig = {uri: walletRpcUri, user: walletRpcUsername, pass: walletRpcPassword};
+  const walletConfig = {uri: walletRpcUri, user: walletRpcUsername, pass: walletRpcPassword};
   console.log("Connecting to monero-wallet-rpc:", JSON.stringify(walletConfig));
   let walletRpc = new MoneroWalletRpc(walletConfig);
   
