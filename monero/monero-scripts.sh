@@ -111,7 +111,7 @@ start_daemon() {
 	local CMD="${DAEMON} \
 		--prune-blockchain \
 		--data-dir ${DATA} \
-		--log-level '2,net.throttle:ERROR,net.http:TRACE' \
+		--log-level '0,net.throttle:ERROR,net.http:TRACE' \
 		--log-file ${LOGS}/monerod.log \
 		--confirm-external-bind \
 		--rpc-bind-ip '${HOST}' \
