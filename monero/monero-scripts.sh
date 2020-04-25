@@ -1,7 +1,7 @@
 NETTYPES="mainnet testnet stagenet"
 SESSIONS="xmr-app-daemon xmr-app-rpc xmr-app-rpc-ssl"
 PARAMS="daemon wallet wallet-ssl"
-CORS="http://86.48.96.142,https://86.48.96.142,http://xmr-app.fumlersoft.dk,https://xmr-app.fumlersoft.dk,http://digest-request.fumlersoft.dk,https://digest-request.fumlersoft.dk,fumlersoft.dk"
+CORS="http://86.48.96.142,https://86.48.96.142:443,http://xmr-app.fumlersoft.dk,https://xmr-app.fumlersoft.dk:443,http://digest-request.fumlersoft.dk,https://digest-request.fumlersoft.dk:443,fumlersoft.dk"
 HOST="86.48.96.142"
 
 declare -A CERTS_SHA256
